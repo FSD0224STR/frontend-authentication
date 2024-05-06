@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { Alert, Box, Container, Grid, Paper, TextField, Typography } from "@mui/material";
 
 import './Home.css'
 import { UserCard } from '../components/UserCard'
@@ -46,11 +47,17 @@ function Home() {
 
   return (
     <>
-      <h1>Lista de usuarios</h1>
-      {users.map(user => <UserCard key={user._id} {...user} onDelete={() => deleteUserAndSync(user._id)}></UserCard>)}
+        <Container maxWidth='md' sx={{ marginTop: '20vh'}}>
+          <Paper sx={{p: 1}}>
+              <Typography variant="h4" sx={{my: 3}}>Lista de usuarios</Typography>
+              <Grid container spacing={1}>
+                {users.map(user => <Grid item xs={12} sm={6} key={user._id}><UserCard key={user._id} {...user} onDelete={() => deleteUserAndSync(user._id)}></UserCard></Grid>)}
+              </Grid>
+          </Paper>
+        </Container>
       <label>Name:</label><input value={name} onChange={e => setName(e.currentTarget.value)}></input>
       <button onClick={addUserAndSync}>Click para añadir</button>
-      {error && <p>Ha habido un error: {error}</p>}
+      {error && <Alert variant="outlined" severity="error">{`Ha habido un error: ${error}`}</Alert>}
     </>
   )
 }

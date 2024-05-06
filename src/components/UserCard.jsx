@@ -1,9 +1,12 @@
+import { Button, Card, Typography } from "@mui/material"
 
 export const UserCard = ({ name, createdAt, onDelete }) => {
-    return <div className="card">
-        <h5>{name}</h5>
-        <p>{createdAt}</p>
-        <button onClick={onDelete}>Borrar</button>
-    </div>
+    return (
+        <Card sx={{p: 1}}>
+            <Typography variant="h6">{name}</Typography>
+            <Typography variant="body2">{createdAt}</Typography>
+            <Button onClick={onDelete}>Borrar</Button>
+        </Card>
+    )
 }
 
