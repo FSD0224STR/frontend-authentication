@@ -1,35 +1,66 @@
 const baseUrl = 'http://localhost:3000'
 
 const getAllUsers = async () => {
-    const token = localStorage.getItem('access_token')
-    const response = await fetch(`${baseUrl}/users`, {headers: {"authorization": `Bearer ${token}` }})
-    const users = await response.json();
-    return users
-    // return fetch(`${baseUrl}/users`).then(response => response.json())
+  const response = await window.fetch(`${baseUrl}/users`)
+
+  if (!response.ok) {
+    const error = await response.json()
+    return {error:  error.message};
+  }
+
+  const users = await response.json();
+  return {data: users} 
 }
 
 const addUser = async (userData) => {
-    const token = localStorage.getItem('access_token')
-    try {
-        const response = await fetch(`${baseUrl}/users/register`, {method: 'POST', body: JSON.stringify({...userData, password: 'perro', role: 'admin'}), headers: {"Content-Type": "application/json","authorization": `Bearer ${token}`} } )
-        if (!response.ok) throw Error(response.statusText)
-        const newlyCreatedUser = await response.json();
-        return newlyCreatedUser
-    } catch (error) {
-        console.log('entramos en el error')
-        return {isError: true, message: error.message}
-    }
+  const token = localStorage.getItem('access_token')
+
+  const response = await fetch(`${baseUrl}/users/add`, {method: 'POST', body: JSON.stringify({...userData, password: 'perro', role: 'admin'}), headers: {"Content-Type": "application/json","authorization": `Bearer ${token}`} } )
+
+  if (!response.ok) {
+    const error = await response.json()
+    return {error: error.message};
+  }
+
+  const newlyCreatedUser = await response.json();
+  return {data: newlyCreatedUser}
 
 }
 
-const deleteUser = (id) => fetch(`${baseUrl}/users/${id}`, {method: 'DELETE', headers: {"authorization": `Bearer ${localStorage.getItem('access_token')}` } } )
+const deleteUser = async id => {
+  const token = localStorage.getItem('access_token')
+
+  const response = await fetch(`${baseUrl}/users/${id}`, {method: 'DELETE', headers: {"authorization": `Bearer ${token}` } } )
+
+  if (!response.ok) {
+    const error = await response.json()
+    return {error:  error.message};
+  }
+
+  return {data: 'ok, borrado'}
+}
 
 const login = async (name, password) => {
-    const response = await fetch(`${baseUrl}/users/login`, {method: 'POST', body: JSON.stringify({name, password}), headers: {"Content-Type": "application/json"}, } )
-    const token = await response.json()
-    return token
+  const response = await fetch(`${baseUrl}/users/login`, {method: 'POST', body: JSON.stringify({name, password}), headers: {"Content-Type": "application/json"}, } )
+
+  if (!response.ok) return {error: response.statusText};
+
+  const token = await response.json()
+  return {data: token}
 }
 
+const getMyProfile = async () => {
+  const token = localStorage.getItem('access_token')
 
-export default { getAllUsers, addUser, deleteUser, login }
+  const response = await fetch(`${baseUrl}/users/me`, {method: 'GET', headers: {"authorization": `Bearer ${token}` } } )
+
+  if (!response.ok) {
+    const error = await response.json()
+    return {error:  error.message};
+  }
+
+  return {data: await response.json()}
+}
+
+export default { getAllUsers, addUser, deleteUser, login, getMyProfile }
 
