@@ -5,6 +5,7 @@ import { Login } from './pages/Login';
 import { NavBar } from './components/NavBar';
 import { AuthContext } from './contexts/authContext';
 import { useContext } from 'react';
+import { Confirm } from './pages/Confirm';
 
 
 export const App = () => {
@@ -16,6 +17,7 @@ export const App = () => {
       <Routes>
         <Route path='/home' element={<Home props></Home>}></Route>
         <Route path='/login' element={<Login props></Login>}></Route>
+        <Route path='/confirmregister/:userid' element={<Confirm />}></Route>
       </Routes>
     </>
   );
